@@ -6,6 +6,7 @@ var mapPinTemplate = document.querySelector('#pin')
   .content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('#card')
   .content.querySelector('.map__card');
+
 var advertParams = {
   TITLE_VALUES: [
     'Большая уютная квартира',
@@ -63,7 +64,7 @@ var advertParams = {
   }
 };
 
-var cardAddressTypes = {
+var accommodationTypes = {
   PALACE: 'Дворец',
   FLAT: 'Квартира',
   HOUSE: 'Дом',
@@ -175,7 +176,7 @@ var renderMapCard = function () {
   mapCard.querySelector('.popup__title').textContent = array[0].offer.title;
   mapCard.querySelector('.popup__text--address').textContent = array[0].offer.address;
   mapCard.querySelector('.popup__text--price').textContent = array[0].offer.price + '₽/ночь';
-  mapCard.querySelector('.popup__type').textContent = cardAddressTypes[array[0].offer.type.toUpperCase()];
+  mapCard.querySelector('.popup__type').textContent = accommodationTypes[array[0].offer.type.toUpperCase()];
   mapCard.querySelector('.popup__text--capacity').textContent = array[0].offer.rooms
   + ' ' + getDeclension(array[0].offer.rooms, ['комната', 'комнаты', 'комнат'])
   + ' для ' + array[0].offer.guests + ' ' + getDeclension(array[0].offer.guests, ['гостя', 'гостей', 'гостей']);
