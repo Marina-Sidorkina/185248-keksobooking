@@ -1,7 +1,7 @@
 'use strict';
 
-var CARD_DESIGNATION = 'map__card';
-var PIN_DESIGNATION = 'map__pin--similar';
+var CARD_DESIGNATION = '.map__card';
+var PIN_DESIGNATION = '.map__pin--similar';
 var mapBlock = document.querySelector('.map');
 var mapPinsBlock = document.querySelector('.map__pins');
 var mainMapPin = mapBlock.querySelector('.map__pin--main');
@@ -121,7 +121,7 @@ var shuffleArray = function (array) {
 };
 
 var resetBlock = function (designationValue, block) {
-  var element = block.querySelector('' + '.' + designationValue + '');
+  var element = block.querySelector(designationValue);
   if (element) {
     block.removeChild(element);
     resetBlock(designationValue, block);
