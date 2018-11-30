@@ -1,7 +1,6 @@
 'use strict';
 
 var CARD_DESIGNATION = '.map__card';
-var PIN_DESIGNATION = '.map__pin--similar';
 var mapBlock = document.querySelector('.map');
 var mapPinsBlock = document.querySelector('.map__pins');
 var mainMapPin = mapBlock.querySelector('.map__pin--main');
@@ -21,6 +20,11 @@ var mapFiltersFieldset = mapFiltersForm.querySelector('fieldset');
 var mainMapPinParams = {
   INITIAL_X: parseInt(mainMapPin.style.left, 10) + mainMapPin.getBoundingClientRect().width / 2,
   INITIAL_Y: parseInt(mainMapPin.style.top, 10) + mainMapPin.getBoundingClientRect().height / 2
+};
+
+var similarMapPinParams = {
+  WIDTH: 50,
+  HEIGHT: 70
 };
 
 var advertParams = {
@@ -106,7 +110,7 @@ var createFeaturesArray = function () {
   for (var i = 0; i < getRandomNumber(getRandomNumber(1, advertParams.FEATURE_VALUES.length), advertParams.FEATURE_VALUES.length); i++) {
     array[i] = getRandomArrayElement(advertParams.FEATURE_VALUES);
   }
-  return array.join(', ');
+  return array;
 };
 
 var shuffleArray = function (array) {
@@ -167,8 +171,8 @@ var renderMapPin = function (advertObject) {
   var pin = mapPinTemplate.cloneNode(true);
   var pinImage = pin.querySelector('img');
   pin.classList.add('map__pin--similar');
-  pin.style.left = (advertObject.location.x - pin.getBoundingClientRect().width / 2) + 'px';
-  pin.style.top = (advertObject.location.y - pin.getBoundingClientRect().height) + 'px';
+  pin.style.left = (advertObject.location.x - similarMapPinParams.WIDTH / 2) + 'px';
+  pin.style.top = (advertObject.location.y - similarMapPinParams.HEIGHT) + 'px';
   pinImage.src = advertObject.author.avatar;
   pinImage.alt = advertObject.offer.title;
   pin.addEventListener('click', function () {
@@ -181,9 +185,9 @@ var renderMapPin = function (advertObject) {
 var renderMapPinsSet = function () {
   var fragment = document.createDocumentFragment();
   var array = createAdvertObjectsArray();
-  for (var i = 0; i < array.length; i++) {
-    fragment.appendChild(renderMapPin(array[i]));
-  }
+  array.forEach(function (item) {
+    fragment.appendChild(renderMapPin(item));
+  });
   return fragment;
 };
 
@@ -197,21 +201,39 @@ var renderPhotosSet = function (object) {
   return fragment;
 };
 
+var createFeatureIcon = function (feature) {
+  var icon = document.createElement('li');
+  icon.classList.add('popup__feature');
+  icon.classList.add('popup__feature--' + feature);
+  return icon;
+};
+
+var createFeaturesIconsSet = function (array) {
+  var fragment = document.createDocumentFragment();
+  array.forEach(function (feature) {
+    fragment.appendChild(createFeatureIcon(feature));
+  });
+  return fragment;
+};
+
 var renderMapCard = function (advertObject) {
   var fragment = document.createDocumentFragment();
   var card = mapCardTemplate.cloneNode(true);
   var photosBlock = card.querySelector('.popup__photos');
+  var featuresBlock = card.querySelector('.popup__features');
   card.querySelector('.popup__title').textContent = advertObject.offer.title;
   card.querySelector('.popup__text--address').textContent = advertObject.offer.address;
   card.querySelector('.popup__text--price').textContent = advertObject.offer.price + '₽/ночь';
   card.querySelector('.popup__type').textContent = accommodationTypes[advertObject.offer.type.toUpperCase()];
   card.querySelector('.popup__text--capacity').textContent = advertObject.offer.rooms
   + ' ' + getDeclension(advertObject.offer.rooms, ['комната', 'комнаты', 'комнат'])
-  + ' для ' + advertObject.offer.guests + ' ' + getDeclension(advertObject.offer.guests, ['гостя', 'гостей', 'гостей']);
+  + ' для ' + advertObject.offer.guests + ' '
+  + getDeclension(advertObject.offer.guests, ['гостя', 'гостей', 'гостей']);
   card.querySelector('.popup__text--time').textContent = 'Заезд после '
   + advertObject.offer.checkin + ', '
   + 'выезд до ' + advertObject.offer.checkout;
-  card.querySelector('.popup__features').textContent = advertObject.offer.features;
+  featuresBlock.innerHTML = '';
+  featuresBlock.appendChild(createFeaturesIconsSet(advertObject.offer.features));
   card.querySelector('.popup__description').textContent = advertObject.offer.description;
   photosBlock.innerHTML = '';
   photosBlock.appendChild(renderPhotosSet(advertObject));
@@ -261,9 +283,8 @@ var onMainMapPinMouseup = function () {
   setNewAdvertFormAbility(false);
   setMapFiltersFormAbility(false);
   setAddressFieldValue(getMainMapPinPointerX(), getMainMapPinPointerY());
-  resetBlock(PIN_DESIGNATION, mapPinsBlock);
-  resetBlock(CARD_DESIGNATION, mapBlock);
   mapPinsBlock.appendChild(renderMapPinsSet());
+  mainMapPin.removeEventListener('mouseup', onMainMapPinMouseup);
 };
 
 setAddressFieldValue(mainMapPinParams.INITIAL_X, mainMapPinParams.INITIAL_Y);
