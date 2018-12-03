@@ -1,6 +1,9 @@
 'use strict';
 
 var CARD_DESIGNATION = '.map__card';
+var PIN_DESIGNATION = '.map__pin--similar';
+var ESC = 27;
+var mainBlock = document.querySelector('main');
 var mapBlock = document.querySelector('.map');
 var mapPinsBlock = document.querySelector('.map__pins');
 var mainMapPin = mapBlock.querySelector('.map__pin--main');
@@ -8,14 +11,23 @@ var mapPinTemplate = document.querySelector('#pin')
   .content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('#card')
   .content.querySelector('.map__card');
-var newAdvertForm = document.querySelector('.ad-form');
-var newAdvertAddressField = newAdvertForm.querySelector('#address');
-var newAdvertFieldsets = newAdvertForm.querySelectorAll('fieldset');
-var newAdvertSubmitButton = newAdvertForm.querySelector('.ad-form__submit');
-var newAdvertResetButton = newAdvertForm.querySelector('.ad-form__reset');
+var successNotificationTemplate = document.querySelector('#success')
+  .content.querySelector('.success');
+var newAdForm = document.querySelector('.ad-form');
+var newAdAddressField = newAdForm.querySelector('#address');
+var newAdRoomsField = document.querySelector('#room_number');
+var newAdCapacityField = document.querySelector('#capacity');
+var newAdTimeInField = document.querySelector('#timein');
+var newAdTimeOutField = document.querySelector('#timeout');
+var newAdPriceField = document.querySelector('#price');
+var newAdTypeField = document.querySelector('#type');
+var newAdFieldsets = newAdForm.querySelectorAll('fieldset');
+var newAdSubmitButton = newAdForm.querySelector('.ad-form__submit');
+var newAdResetButton = newAdForm.querySelector('.ad-form__reset');
 var mapFiltersForm = document.querySelector('.map__filters');
 var mapFilersSelects = mapFiltersForm.querySelectorAll('select');
 var mapFiltersFieldset = mapFiltersForm.querySelector('fieldset');
+var resetButton = document.querySelector('.ad-form__reset');
 
 var mainMapPinParams = {
   INITIAL_X: parseInt(mainMapPin.style.left, 10) + mainMapPin.getBoundingClientRect().width / 2,
@@ -89,6 +101,20 @@ var accommodationTypes = {
   FLAT: 'Квартира',
   HOUSE: 'Дом',
   BUNGALO: 'Бунгало'
+};
+
+var minPriceParams = {
+  PALACE: 10000,
+  FLAT: 1000,
+  HOUSE: 5000,
+  BUNGALO: 0
+};
+
+var capacityParams = {
+  1: ['2', '3', '0'],
+  2: ['3', '0'],
+  3: ['0'],
+  100: ['1', '2', '3']
 };
 
 var getRandomNumber = function (min, max) {
@@ -250,10 +276,10 @@ var setItemsAbility = function (array, disabilityValue) {
   });
 };
 
-var setNewAdvertFormAbility = function (disabilityValue) {
-  setItemsAbility(newAdvertFieldsets, disabilityValue);
-  newAdvertSubmitButton.disabled = disabilityValue;
-  newAdvertResetButton.disabled = disabilityValue;
+var setnewAdFormAbility = function (disabilityValue) {
+  setItemsAbility(newAdFieldsets, disabilityValue);
+  newAdSubmitButton.disabled = disabilityValue;
+  newAdResetButton.disabled = disabilityValue;
 };
 
 var setMapFiltersFormAbility = function (disabilityValue) {
@@ -262,7 +288,7 @@ var setMapFiltersFormAbility = function (disabilityValue) {
 };
 
 var setAddressFieldValue = function (x, y) {
-  newAdvertAddressField.value = x + ', ' + y;
+  newAdAddressField.value = x + ', ' + y;
 };
 
 var getMainMapPinPointerX = function () {
@@ -277,17 +303,96 @@ var getMainMapPinPointerY = function () {
     + parseInt(window.getComputedStyle(document.querySelector('.map__pin--main'), ':after').getPropertyValue('height'), 10);
 };
 
+var onEscapeKeydown = function (keyCode) {
+  return (keyCode === ESC);
+};
+
 var onMainMapPinMouseup = function () {
   mapBlock.classList.remove('map--faded');
-  newAdvertForm.classList.remove('ad-form--disabled');
-  setNewAdvertFormAbility(false);
+  newAdForm.classList.remove('ad-form--disabled');
+  setnewAdFormAbility(false);
   setMapFiltersFormAbility(false);
   setAddressFieldValue(getMainMapPinPointerX(), getMainMapPinPointerY());
   mapPinsBlock.appendChild(renderMapPinsSet());
   mainMapPin.removeEventListener('mouseup', onMainMapPinMouseup);
 };
 
-setAddressFieldValue(mainMapPinParams.INITIAL_X, mainMapPinParams.INITIAL_Y);
-setNewAdvertFormAbility(true);
+var onTypeChange = function () {
+  var min = minPriceParams[newAdTypeField.value.toUpperCase()];
+  newAdPriceField.min = min;
+  newAdPriceField.placeholder = min;
+};
+
+var onTimeInChange = function () {
+  newAdTimeOutField.value = newAdTimeInField.value;
+};
+
+var onTimeOutChange = function () {
+  newAdTimeInField.value = newAdTimeOutField.value;
+};
+
+var onCapacityInvalid = function () {
+  var check = false;
+  check = capacityParams[newAdRoomsField.value].some(function (item) {
+    return item === newAdCapacityField.value;
+  });
+  if (check) {
+    newAdCapacityField.setCustomValidity('Данная опция недоступна для указанного количества комнат');
+  } else {
+    newAdCapacityField.setCustomValidity('');
+  }
+};
+
+var onFormSubmitAndReset = function () {
+  mapBlock.classList.add('map--faded');
+  newAdForm.classList.add('ad-form--disabled');
+  newAdForm.reset();
+  resetBlock(PIN_DESIGNATION, mapPinsBlock);
+  resetBlock(CARD_DESIGNATION, mapBlock);
+  setnewAdFormAbility(true);
+  setMapFiltersFormAbility(true);
+  setAddressFieldValue(mainMapPinParams.INITIAL_X, mainMapPinParams.INITIAL_Y);
+  mainMapPin.addEventListener('mouseup', onMainMapPinMouseup);
+};
+
+var onNotificationEscape = function (evt) {
+  var element = document.querySelector('.success');
+  if (onEscapeKeydown(evt.keyCode)) {
+    mainBlock.removeChild(element);
+  }
+  window.removeEventListener('keydown', onNotificationEscape);
+  window.removeEventListener('click', onNotificationClick);
+};
+
+var onNotificationClick = function () {
+  var element = document.querySelector('.success');
+  mainBlock.removeChild(element);
+  window.removeEventListener('keydown', onNotificationEscape);
+  window.removeEventListener('click', onNotificationClick);
+};
+
+var onFormSubmit = function () {
+  if (newAdForm.checkValidity()) {
+    var notification = successNotificationTemplate.cloneNode(true);
+    mainBlock.appendChild(notification);
+    window.addEventListener('keydown', onNotificationEscape);
+    window.addEventListener('click', onNotificationClick);
+    onFormSubmitAndReset();
+  }
+};
+
+onCapacityInvalid();
+setnewAdFormAbility(true);
 setMapFiltersFormAbility(true);
+setAddressFieldValue(mainMapPinParams.INITIAL_X, mainMapPinParams.INITIAL_Y);
+newAdForm.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+  onFormSubmit();
+});
+newAdCapacityField.addEventListener('change', onCapacityInvalid);
+newAdRoomsField.addEventListener('change', onCapacityInvalid);
+newAdTimeInField.addEventListener('change', onTimeInChange);
+newAdTimeOutField.addEventListener('change', onTimeOutChange);
+newAdTypeField.addEventListener('change', onTypeChange);
 mainMapPin.addEventListener('mouseup', onMainMapPinMouseup);
+resetButton.addEventListener('click', onFormSubmitAndReset);
