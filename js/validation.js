@@ -2,8 +2,6 @@
 
 (function () {
   var mainBlock = document.querySelector('main');
-  var successNotificationTemplate = document.querySelector('#success')
-    .content.querySelector('.success');
   var newAdForm = document.querySelector('.ad-form');
   var newAdRoomsField = document.querySelector('#room_number');
   var newAdCapacityField = document.querySelector('#capacity');
@@ -14,7 +12,8 @@
   var newAdFieldsets = newAdForm.querySelectorAll('fieldset');
   var newAdSubmitButton = newAdForm.querySelector('.ad-form__submit');
   var newAdResetButton = newAdForm.querySelector('.ad-form__reset');
-  var resetButton = document.querySelector('.ad-form__reset');
+  var successNotificationTemplate = document.querySelector('#success')
+    .content.querySelector('.success');
 
   var minPriceParams = {
     PALACE: 10000,
@@ -30,10 +29,21 @@
     100: ['1', '2', '3']
   };
 
-  var setnewAdFormAbility = function (disabilityValue) {
+  var setNewAdFormAbility = function (disabilityValue) {
     window.utils.setItemsAbility(newAdFieldsets, disabilityValue);
     newAdSubmitButton.disabled = disabilityValue;
     newAdResetButton.disabled = disabilityValue;
+  };
+
+  var disableNewAdForm = function () {
+    newAdForm.classList.add('ad-form--disabled');
+    newAdForm.reset();
+    setNewAdFormAbility(true);
+  };
+
+  var enableNewAdForm = function () {
+    newAdForm.classList.remove('ad-form--disabled');
+    setNewAdFormAbility(false);
   };
 
   var onTypeChange = function () {
@@ -62,20 +72,21 @@
     }
   };
 
-  var onNotificationEscape = function (evt) {
-    var element = document.querySelector('.success');
-    if (window.utils.onEscapeKeydown(evt.keyCode)) {
-      mainBlock.removeChild(element);
-    }
-    window.removeEventListener('keydown', onNotificationEscape);
-    window.removeEventListener('click', onNotificationClick);
-  };
-
-  var onNotificationClick = function () {
+  var closeNotification = function () {
     var element = document.querySelector('.success');
     mainBlock.removeChild(element);
     window.removeEventListener('keydown', onNotificationEscape);
     window.removeEventListener('click', onNotificationClick);
+  };
+
+  var onNotificationEscape = function (evt) {
+    if (window.utils.onEscapeKeydown(evt.keyCode)) {
+      closeNotification();
+    }
+  };
+
+  var onNotificationClick = function () {
+    closeNotification();
   };
 
   var onFormSubmit = function () {
@@ -88,29 +99,18 @@
     }
   };
 
-  var disableNewAdForm = function () {
-    newAdForm.classList.add('ad-form--disabled');
-    newAdForm.reset();
-    setnewAdFormAbility(true);
-  };
-
-  var enableNewAdForm = function () {
-    newAdForm.classList.remove('ad-form--disabled');
-    setnewAdFormAbility(false);
-  };
-
   onCapacityInvalid();
-  setnewAdFormAbility(true);
-  newAdForm.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    onFormSubmit();
-  });
+  setNewAdFormAbility(true);
   newAdCapacityField.addEventListener('change', onCapacityInvalid);
   newAdRoomsField.addEventListener('change', onCapacityInvalid);
   newAdTimeInField.addEventListener('change', onTimeInChange);
   newAdTimeOutField.addEventListener('change', onTimeOutChange);
   newAdTypeField.addEventListener('change', onTypeChange);
-  resetButton.addEventListener('click', window.map.onFormSubmitAndReset);
+  newAdResetButton.addEventListener('click', window.map.onFormSubmitAndReset);
+  newAdForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    onFormSubmit();
+  });
 
 
   window.validation = {

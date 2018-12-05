@@ -65,7 +65,7 @@
     photosBlock.appendChild(renderPhotosSet(advertObject));
     card.querySelector('.popup__avatar').src = advertObject.author.avatar;
     card.querySelector('.popup__close').addEventListener('click', function () {
-      window.map.resetMapBlock();
+      window.map.resetBlock();
     });
     return fragment.appendChild(card);
   };
