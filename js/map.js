@@ -67,7 +67,7 @@
   var onCardEscape = function (evt) {
     if (window.utils.onEscapeKeydown(evt.keyCode)) {
       resetMapBlock();
-      document.revomeEventListener('keydown', onCardEscape);
+      document.removeEventListener('keydown', onCardEscape);
     }
   };
 
