@@ -66,6 +66,7 @@
     card.querySelector('.popup__avatar').src = advertObject.author.avatar;
     card.querySelector('.popup__close').addEventListener('click', function () {
       window.map.resetBlock();
+      document.addEventListener('keydown', window.map.onCardEscape);
     });
     return fragment.appendChild(card);
   };

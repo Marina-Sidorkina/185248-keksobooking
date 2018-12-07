@@ -15,6 +15,7 @@
     var element = mapBlock.querySelector('.map__card');
     if (element) {
       mapBlock.removeChild(element);
+      getAndResetActivePin();
       resetMapBlock();
     }
   };
@@ -38,6 +39,8 @@
     pin.addEventListener('click', function () {
       resetMapBlock();
       mapBlock.insertBefore(window.renderMapCard(advertObject), mapBlock.children[1]);
+      document.addEventListener('keydown', onCardEscape);
+      pin.classList.add('map__pin--active');
     });
     return pin;
   };
@@ -56,6 +59,18 @@
     mapPinsBlock.appendChild(renderMapPinsSet());
   };
 
+  var getAndResetActivePin = function () {
+    var element = document.querySelector('.map__pin--active');
+    element.classList.remove('map__pin--active');
+  };
+
+  var onCardEscape = function (evt) {
+    if (window.utils.onEscapeKeydown(evt.keyCode)) {
+      resetMapBlock();
+      document.removeEventListener('keydown', onCardEscape);
+    }
+  };
+
   var onFormSubmitAndReset = function () {
     mapBlock.classList.add('map--faded');
     document.querySelector('#price').placeholder = 5000;
@@ -69,6 +84,7 @@
   window.map = {
     resetBlock: resetMapBlock,
     onFormSubmitAndReset: onFormSubmitAndReset,
-    enablePage: enablePage
+    enablePage: enablePage,
+    onCardEscape: onCardEscape
   };
 })();
