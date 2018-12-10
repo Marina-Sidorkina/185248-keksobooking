@@ -1,15 +1,15 @@
 'use strict';
 
 (function () {
-  var mapBlock = document.querySelector('.map');
-  var mapPinsBlock = document.querySelector('.map__pins');
-  var mapPinTemplate = document.querySelector('#pin')
-    .content.querySelector('.map__pin');
-
+  var pinsAmount = 5;
   var similarMapPinParams = {
     WIDTH: 50,
     HEIGHT: 70
   };
+  var mapBlock = document.querySelector('.map');
+  var mapPinsBlock = document.querySelector('.map__pins');
+  var mapPinTemplate = document.querySelector('#pin')
+    .content.querySelector('.map__pin');
 
   var resetMapBlock = function () {
     var element = mapBlock.querySelector('.map__card');
@@ -45,18 +45,21 @@
     return pin;
   };
 
-  var renderMapPinsSet = function () {
+  var renderMapPinsSet = function (array) {
     var fragment = document.createDocumentFragment();
-    var array = window.createAdvertObjectsArray();
-    array.forEach(function (item) {
-      fragment.appendChild(renderMapPin(item));
-    });
-    return fragment;
+    var count = 0;
+    for (var i = 0; count < pinsAmount; i++) {
+      if (array[i].offer) {
+        fragment.appendChild(renderMapPin(array[i]));
+        count += 1;
+      }
+    }
+    mapPinsBlock.appendChild(fragment);
   };
 
   var enablePage = function () {
     mapBlock.classList.remove('map--faded');
-    mapPinsBlock.appendChild(renderMapPinsSet());
+    window.backend.load(renderMapPinsSet, window.backend.onLoadAndSendDataError);
   };
 
   var getAndResetActivePin = function () {

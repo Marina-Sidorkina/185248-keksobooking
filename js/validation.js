@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var mainBlock = document.querySelector('main');
   var newAdForm = document.querySelector('.ad-form');
   var newAdRoomsField = document.querySelector('#room_number');
   var newAdCapacityField = document.querySelector('#capacity');
@@ -14,6 +13,7 @@
   var newAdResetButton = newAdForm.querySelector('.ad-form__reset');
   var successNotificationTemplate = document.querySelector('#success')
     .content.querySelector('.success');
+  var successNotification = successNotificationTemplate.cloneNode(true);
 
   var minPriceParams = {
     PALACE: 10000,
@@ -72,30 +72,28 @@
     }
   };
 
-  var closeNotification = function () {
-    var element = document.querySelector('.success');
-    mainBlock.removeChild(element);
+  var closeSuccessNotification = function () {
+    window.utils.deleteChild(successNotification);
     window.removeEventListener('keydown', onNotificationEscape);
     window.removeEventListener('click', onNotificationClick);
   };
 
   var onNotificationEscape = function (evt) {
     if (window.utils.onEscapeKeydown(evt.keyCode)) {
-      closeNotification();
+      closeSuccessNotification();
     }
   };
 
   var onNotificationClick = function () {
-    closeNotification();
+    closeSuccessNotification();
   };
 
   var onFormSubmit = function () {
     if (newAdForm.checkValidity()) {
-      var notification = successNotificationTemplate.cloneNode(true);
-      mainBlock.appendChild(notification);
+      window.utils.addChild(successNotification);
+      window.map.onFormSubmitAndReset();
       window.addEventListener('keydown', onNotificationEscape);
       window.addEventListener('click', onNotificationClick);
-      window.map.onFormSubmitAndReset();
     }
   };
 
@@ -108,10 +106,9 @@
   newAdTypeField.addEventListener('change', onTypeChange);
   newAdResetButton.addEventListener('click', window.map.onFormSubmitAndReset);
   newAdForm.addEventListener('submit', function (evt) {
+    window.backend.send(new FormData(newAdForm), onFormSubmit, window.backend.onLoadAndSendDataError);
     evt.preventDefault();
-    onFormSubmit();
   });
-
 
   window.validation = {
     disableNewAdForm: disableNewAdForm,
