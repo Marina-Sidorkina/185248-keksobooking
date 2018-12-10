@@ -13,8 +13,18 @@
     });
   };
 
+  var addChild = function (element) {
+    document.querySelector('main').appendChild(element);
+  };
+
+  var deleteChild = function (element) {
+    document.querySelector('main').removeChild(element);
+  };
+
   window.utils = {
     onEscapeKeydown: onEscapeKeydown,
-    setItemsAbility: setItemsAbility
+    setItemsAbility: setItemsAbility,
+    addChild: addChild,
+    deleteChild: deleteChild
   };
 })();
