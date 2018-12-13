@@ -14,14 +14,12 @@
   var successNotificationTemplate = document.querySelector('#success')
     .content.querySelector('.success');
   var successNotification = successNotificationTemplate.cloneNode(true);
-
   var minPriceParams = {
     PALACE: 10000,
     FLAT: 1000,
     HOUSE: 5000,
     BUNGALO: 0
   };
-
   var capacityParams = {
     1: ['2', '3', '0'],
     2: ['3', '0'],
