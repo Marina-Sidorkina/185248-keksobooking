@@ -10,6 +10,8 @@
   var mapPinsBlock = document.querySelector('.map__pins');
   var mapPinTemplate = document.querySelector('#pin')
     .content.querySelector('.map__pin');
+  var mapFiltersForm = document.querySelector('.map__filters');
+  var listFromServer = [];
 
   var resetMapBlock = function () {
     var element = mapBlock.querySelector('.map__card');
@@ -46,14 +48,20 @@
   };
 
   var renderMapPinsSet = function (array) {
+    listFromServer = array.slice();
     var fragment = document.createDocumentFragment();
     var count = 0;
-    for (var i = 0; count < pinsAmount; i++) {
-      if (array[i].offer) {
-        fragment.appendChild(renderMapPin(array[i]));
+    var filteredArray = listFromServer.filter(function (item) {
+      return window.filter.checkOffer(item);
+    });
+    for (var i = 0; count < pinsAmount && count < filteredArray.length; i++) {
+      if (filteredArray[i].offer) {
+        fragment.appendChild(renderMapPin(filteredArray[i]));
         count += 1;
       }
     }
+    resetMapPinsBlock();
+    resetMapBlock();
     mapPinsBlock.appendChild(fragment);
   };
 
@@ -64,7 +72,9 @@
 
   var getAndResetActivePin = function () {
     var element = document.querySelector('.map__pin--active');
-    element.classList.remove('map__pin--active');
+    if (element) {
+      element.classList.remove('map__pin--active');
+    }
   };
 
   var onCardEscape = function (evt) {
@@ -80,9 +90,13 @@
     window.validation.disableNewAdForm();
     resetMapPinsBlock();
     resetMapBlock();
-    window.setMapFiltersFormAbility(true);
+    window.filter.setMapFormAbility(true);
     window.resetMainPin();
   };
+
+  mapFiltersForm.addEventListener('change', window.debounce(function () {
+    renderMapPinsSet(listFromServer);
+  }));
 
   window.map = {
     resetBlock: resetMapBlock,

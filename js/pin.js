@@ -4,12 +4,10 @@
   var mainMapPin = document.querySelector('.map__pin--main');
   var newAdAddressField = document.querySelector('#address');
   var similarPinsAbility = false;
-
   var pointerOffsetParams = {
     X: Math.floor(mainMapPin.getBoundingClientRect().width / 2),
     Y: Math.floor(mainMapPin.getBoundingClientRect().height - 6) + parseInt(window.getComputedStyle(document.querySelector('.map__pin--main'), ':after').getPropertyValue('height'), 10),
   };
-
   var mainMapPinParams = {
     INITIAL_X: Math.floor(parseInt(mainMapPin.style.left, 10) + mainMapPin.getBoundingClientRect().width / 2),
     INITIAL_Y: Math.floor(parseInt(mainMapPin.style.top, 10) + mainMapPin.getBoundingClientRect().height / 2),
@@ -86,7 +84,7 @@
       if (!similarPinsAbility) {
         window.map.enablePage();
         window.validation.enableNewAdForm();
-        window.setMapFiltersFormAbility(false);
+        window.filter.setMapFormAbility(false);
         similarPinsAbility = true;
       }
       document.removeEventListener('mousemove', onMouseMove);

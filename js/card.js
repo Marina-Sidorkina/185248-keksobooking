@@ -3,7 +3,6 @@
 (function () {
   var mapCardTemplate = document.querySelector('#card')
     .content.querySelector('.map__card');
-
   var accommodationTypes = {
     PALACE: 'Дворец',
     FLAT: 'Квартира',
