@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var pinsAmount = 5;
+  var PINS_AMOUNT = 5;
   var similarMapPinParams = {
     WIDTH: 50,
     HEIGHT: 70
@@ -54,7 +54,7 @@
     var filteredArray = listFromServer.filter(function (item) {
       return window.filter.checkOffer(item);
     });
-    for (var i = 0; count < pinsAmount && count < filteredArray.length; i++) {
+    for (var i = 0; count < PINS_AMOUNT && count < filteredArray.length; i++) {
       if (filteredArray[i].offer) {
         fragment.appendChild(renderMapPin(filteredArray[i]));
         count += 1;
@@ -90,8 +90,11 @@
     window.validation.disableNewAdForm();
     resetMapPinsBlock();
     resetMapBlock();
+    mapFiltersForm.reset();
     window.filter.setMapFormAbility(true);
     window.resetMainPin();
+    window.resetAvatar();
+    window.resetPhotos();
   };
 
   mapFiltersForm.addEventListener('change', window.debounce(function () {

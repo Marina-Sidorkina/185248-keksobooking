@@ -3,7 +3,6 @@
 (function () {
   var mainMapPin = document.querySelector('.map__pin--main');
   var newAdAddressField = document.querySelector('#address');
-  var similarPinsAbility = false;
   var pointerOffsetParams = {
     X: Math.floor(mainMapPin.getBoundingClientRect().width / 2),
     Y: Math.floor(mainMapPin.getBoundingClientRect().height - 6) + parseInt(window.getComputedStyle(document.querySelector('.map__pin--main'), ':after').getPropertyValue('height'), 10),
@@ -16,6 +15,7 @@
     BREAK_POINT_TOP: 130 - pointerOffsetParams.Y,
     BREAK_POINT_BOTTOM: 630 - pointerOffsetParams.Y
   };
+  var similarPinsAbility = false;
 
   var getMainMapPinPointerX = function () {
     return parseInt(mainMapPin.style.left, 10) + pointerOffsetParams.X;
@@ -97,5 +97,6 @@
 
   resetMainPin();
   mainMapPin.addEventListener('mousedown', onMouseDown);
+
   window.resetMainPin = resetMainPin;
 })();

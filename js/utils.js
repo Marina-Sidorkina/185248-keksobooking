@@ -2,6 +2,7 @@
 
 (function () {
   var ESC = 27;
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var onEscapeKeydown = function (keyCode) {
     return (keyCode === ESC);
@@ -21,10 +22,18 @@
     document.querySelector('main').removeChild(element);
   };
 
+  var checkFileType = function (file) {
+    var fileName = file.name.toLowerCase();
+    return FILE_TYPES.some(function (ending) {
+      return fileName.endsWith(ending);
+    });
+  };
+
   window.utils = {
     onEscapeKeydown: onEscapeKeydown,
     setItemsAbility: setItemsAbility,
     addChild: addChild,
-    deleteChild: deleteChild
+    deleteChild: deleteChild,
+    checkFileType: checkFileType
   };
 })();
