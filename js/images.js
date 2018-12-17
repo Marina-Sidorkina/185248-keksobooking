@@ -44,37 +44,33 @@
     }
   };
 
-  var onImagesInputChange = function (index) {
-    var file = imagesInput.files[index++];
-    var reader = new FileReader();
-    reader.addEventListener('load', function () {
-      checkUrl(reader.result, file);
-      if (index < imagesInput.files.length) {
-        onImagesInputChange(index);
-      } else {
-        renderImages(reader.result);
-      }
-    });
-    reader.readAsDataURL(file);
+  var checkFilesNumber = function (index, files, readerResult) {
+    if (index < files.length) {
+      loadImagesPreview(files, index);
+    } else {
+      renderImages(readerResult);
+    }
   };
 
-  var loadDroppedImagesPreview = function (files, index) {
-    var file = files[index++];
-    var reader = new FileReader();
-    reader.addEventListener('load', function () {
-      checkUrl(reader.result, file);
-      if (index < files.length) {
-        loadDroppedImagesPreview(files, index);
-      } else {
-        renderImages(reader.result);
-      }
-    });
-    reader.readAsDataURL(file);
+  var loadImagesPreview = function (files, index) {
+    if (files.length) {
+      var file = files[index++];
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        checkUrl(reader.result, file);
+        checkFilesNumber(index, files, reader.result);
+      });
+      reader.readAsDataURL(file);
+    }
+  };
+
+  var onImagesInputChange = function (index) {
+    loadImagesPreview(imagesInput.files, index);
   };
 
   var onImagesInputDrop = function (evt, index) {
     var dataTransfer = evt.dataTransfer;
-    loadDroppedImagesPreview(dataTransfer.files, index);
+    loadImagesPreview(dataTransfer.files, index);
   };
 
   var resetImages = function () {

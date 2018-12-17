@@ -22,7 +22,9 @@
 
   var onAvatarChange = function () {
     var file = avatarInput.files[0];
-    loadAvatarPreview(file);
+    if (file) {
+      loadAvatarPreview(file);
+    }
   };
 
   var onAvatarDropZoneDrop = function (evt) {
