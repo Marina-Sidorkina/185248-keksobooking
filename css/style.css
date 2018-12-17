@@ -568,6 +568,10 @@ fieldset {
   cursor: pointer;
 }
 
+.ad-form-header__drop-zone.highlight {
+  border: dashed 1px #ff6d51;
+}
+
 .ad-form-header__drop-zone:hover {
   color: #ff5635;
 }
@@ -792,6 +796,10 @@ fieldset {
   border-radius: 5px;
 
   cursor: pointer;
+}
+
+.ad-form__drop-zone.highlight {
+  border: dashed 1px #ff6d51;
 }
 
 .ad-form__drop-zone:hover {

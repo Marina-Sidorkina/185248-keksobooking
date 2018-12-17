@@ -94,7 +94,7 @@
     window.filter.setMapFormAbility(true);
     window.resetMainPin();
     window.resetAvatar();
-    window.resetPhotos();
+    window.resetImages();
   };
 
   mapFiltersForm.addEventListener('change', window.debounce(function () {

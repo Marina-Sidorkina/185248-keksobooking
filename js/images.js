@@ -4,6 +4,7 @@
   var imagesBlock = document.querySelector('.ad-form__photo-container');
   var imagesInput = document.querySelector('#images');
   var imagesPreview = document.querySelector('.ad-form__photo');
+  var imagesDropZone = document.querySelector('.ad-form__drop-zone');
   var urls = [];
 
   var removePreviousImages = function () {
@@ -43,13 +44,13 @@
     }
   };
 
-  var onFileInputChange = function (evt, input, preview, index) {
-    var file = input.files[index++];
+  var onImagesInputChange = function (index) {
+    var file = imagesInput.files[index++];
     var reader = new FileReader();
     reader.addEventListener('load', function () {
       checkUrl(reader.result, file);
-      if (evt.target === imagesInput && index < imagesInput.files.length) {
-        onFileInputChange(evt, input, preview, index);
+      if (index < imagesInput.files.length) {
+        onImagesInputChange(index);
       } else {
         renderImages(reader.result);
       }
@@ -57,15 +58,40 @@
     reader.readAsDataURL(file);
   };
 
-  var resetPhotos = function () {
+  var loadDroppedImagesPreview = function (files, index) {
+    var file = files[index++];
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+      checkUrl(reader.result, file);
+      if (index < files.length) {
+        loadDroppedImagesPreview(files, index);
+      } else {
+        renderImages(reader.result);
+      }
+    });
+    reader.readAsDataURL(file);
+  };
+
+  var onImagesInputDrop = function (evt, index) {
+    var dataTransfer = evt.dataTransfer;
+    loadDroppedImagesPreview(dataTransfer.files, index);
+  };
+
+  var resetImages = function () {
     removePreviousImages();
     var fragment = imagesPreview.cloneNode(true);
     imagesBlock.appendChild(fragment);
   };
 
-  imagesInput.addEventListener('change', function (evt) {
-    onFileInputChange(evt, imagesInput, imagesPreview, 0);
+  window.utils.setEventPrevent(imagesDropZone);
+  window.utils.setHighlightState(imagesDropZone);
+  window.utils.setUnhighlightState(imagesDropZone);
+  imagesInput.addEventListener('change', function () {
+    onImagesInputChange(0);
+  });
+  imagesDropZone.addEventListener('drop', function (evt) {
+    onImagesInputDrop(evt, 0);
   });
 
-  window.resetPhotos = resetPhotos;
+  window.resetImages = resetImages;
 })();
