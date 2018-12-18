@@ -568,6 +568,10 @@ fieldset {
   cursor: pointer;
 }
 
+.ad-form-header__drop-zone.highlight {
+  border: dashed 1px #ff6d51;
+}
+
 .ad-form-header__drop-zone:hover {
   color: #ff5635;
 }
@@ -794,6 +798,10 @@ fieldset {
   cursor: pointer;
 }
 
+.ad-form__drop-zone.highlight {
+  border: dashed 1px #ff6d51;
+}
+
 .ad-form__drop-zone:hover {
   color: #ff5635;
 }
@@ -806,6 +814,16 @@ fieldset {
 }
 
 .ad-form__photo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+
   margin-right: 10px;
   margin-bottom: 10px;
 

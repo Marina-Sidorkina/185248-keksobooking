@@ -75,5 +75,4 @@
     setMapFormAbility: setMapFiltersFormAbility,
     checkOffer: checkOffer
   };
-
 })();
