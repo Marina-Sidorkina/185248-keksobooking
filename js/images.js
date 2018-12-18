@@ -4,7 +4,6 @@
   var imagesBlock = document.querySelector('.ad-form__photo-container');
   var imagesInput = document.querySelector('#images');
   var imagesPreview = document.querySelector('.ad-form__photo');
-  var imagesDropZone = document.querySelector('.ad-form__drop-zone');
   var urls = [];
 
   var removePreviousImages = function () {
@@ -68,25 +67,14 @@
     loadImagesPreview(imagesInput.files, index);
   };
 
-  var onImagesInputDrop = function (evt, index) {
-    var dataTransfer = evt.dataTransfer;
-    loadImagesPreview(dataTransfer.files, index);
-  };
-
   var resetImages = function () {
     removePreviousImages();
     var fragment = imagesPreview.cloneNode(true);
     imagesBlock.appendChild(fragment);
   };
 
-  window.utils.setEventPrevent(imagesDropZone);
-  window.utils.setHighlightState(imagesDropZone);
-  window.utils.setUnhighlightState(imagesDropZone);
   imagesInput.addEventListener('change', function () {
     onImagesInputChange(0);
-  });
-  imagesDropZone.addEventListener('drop', function (evt) {
-    onImagesInputDrop(evt, 0);
   });
 
   window.resetImages = resetImages;
