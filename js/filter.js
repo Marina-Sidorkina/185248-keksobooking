@@ -53,7 +53,8 @@
   var checkOffer = function (item) {
     return (checkHousingFeatures(item)
       && checkSelectValue(item, housingRoomsSelect, parseInt(housingRoomsSelect.value, 10), 'rooms')
-      && checkSelectValue(item, housingGuestsSelect, parseInt(housingGuestsSelect.value, 10), 'guests') && checkSelectValue(item, housingTypeSelect, housingTypeSelect.value, 'type')
+      && checkSelectValue(item, housingGuestsSelect, parseInt(housingGuestsSelect.value, 10), 'guests')
+      && checkSelectValue(item, housingTypeSelect, housingTypeSelect.value, 'type')
       && checkSelectValue(item, housingPriceSelect, housingPriceSelect.value, 'price'));
   };
 
