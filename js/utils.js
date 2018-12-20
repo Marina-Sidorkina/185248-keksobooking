@@ -3,9 +3,33 @@
 (function () {
   var ESC = 27;
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var DeclensionAuxiliaryArray = {
+    BREAKPOINTS: [4, 5, 20],
+    DIVIDERS: [10, 100],
+    CASES: [2, 0, 1, 1, 1, 2]
+  };
 
   var onEscapeKeydown = function (keyCode) {
     return (keyCode === ESC);
+  };
+
+  var getRemainder = function (number, divider) {
+    return number % divider;
+  };
+
+  var checkRemainderByHundred = function (number) {
+    return getRemainder(number, DeclensionAuxiliaryArray.DIVIDERS[1]) > DeclensionAuxiliaryArray.BREAKPOINTS[0] && getRemainder(number, DeclensionAuxiliaryArray.DIVIDERS[1]) < DeclensionAuxiliaryArray.BREAKPOINTS[2];
+  };
+
+  var checkRemainderByTen = function (number) {
+    return getRemainder(number, DeclensionAuxiliaryArray.DIVIDERS[0]) < DeclensionAuxiliaryArray.BREAKPOINTS[1];
+  };
+
+  var getDeclension = function (number, wordDeclForOne, wordDeclForFour, wordDeclForFive) {
+    var declensionVariants = [wordDeclForOne, wordDeclForFour, wordDeclForFive];
+    return declensionVariants[checkRemainderByHundred(number) ?
+      2 : DeclensionAuxiliaryArray.CASES[checkRemainderByTen(number) ?
+        getRemainder(number, DeclensionAuxiliaryArray.DIVIDERS[0]) : 5]];
   };
 
   var setItemsAbility = function (array, disabilityValue) {
@@ -34,6 +58,7 @@
     setItemsAbility: setItemsAbility,
     addChild: addChild,
     deleteChild: deleteChild,
-    checkFileType: checkFileType
+    checkFileType: checkFileType,
+    getDeclension: getDeclension
   };
 })();

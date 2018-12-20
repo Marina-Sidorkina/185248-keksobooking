@@ -3,11 +3,11 @@
 (function () {
   var LOAD_STATUS_OK = 200;
   var TIMEOUT = 1000;
-  var urls = {
+  var Url = {
     SEND_ADDRESS: 'https://js.dump.academy/keksobooking',
     LOAD_ADDRESS: 'https://js.dump.academy/keksobooking/data'
   };
-  var loadingErrors = {
+  var LoadingError = {
     400: 'Неверный запрос',
     401: 'Пользователь не авторизован',
     404: 'Ничего не найдено',
@@ -37,7 +37,7 @@
   };
 
   var onLoadAndSendError = function (error) {
-    var message = (loadingErrors[error] || loadingErrors.DEFAULT);
+    var message = (LoadingError[error] || LoadingError.DEFAULT);
     errorNotificationMessage.textContent = message;
     window.utils.addChild(errorNotification);
     window.addEventListener('keydown', onErrorNotificationEscape);
@@ -71,13 +71,13 @@
 
   var send = function (data, onLoad, onError) {
     var xhr = createXhr(onLoad, onError);
-    xhr.open('POST', urls.SEND_ADDRESS);
+    xhr.open('POST', Url.SEND_ADDRESS);
     xhr.send(data);
   };
 
   var load = function (onLoad, onError) {
     var xhr = createXhr(onLoad, onError);
-    xhr.open('GET', urls.LOAD_ADDRESS);
+    xhr.open('GET', Url.LOAD_ADDRESS);
     xhr.send();
   };
 

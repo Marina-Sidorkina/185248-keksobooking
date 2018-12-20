@@ -9,15 +9,15 @@
   var housingRoomsSelect = document.querySelector('#housing-rooms');
   var housingGuestsSelect = document.querySelector('#housing-guests');
   var housingPriceSelect = document.querySelector('#housing-price');
-  var priceCheckVariants = {
-    low: function (item) {
-      return item.offer.price < 10000;
+  var PriceCheckVariant = {
+    low: function (item, field) {
+      return item.offer[field] < 10000;
     },
-    middle: function (item) {
-      return item.offer.price >= 10000 && item.offer.price <= 50000;
+    middle: function (item, field) {
+      return item.offer[field] >= 10000 && item.offer[field] <= 50000;
     },
-    high: function (item) {
-      return item.offer.price > 50000;
+    high: function (item, field) {
+      return item.offer[field] > 50000;
     }
   };
 
@@ -40,33 +40,21 @@
     return check;
   };
 
-  var checkRoomsAndGuestsValue = function (select, field, item) {
+  var checkSelectValue = function (item, select, value, field) {
     var check = true;
-    if (select.value !== 'any') {
-      check = item.offer[field] === parseInt(select.value, 10);
-    }
-    return check;
-  };
-
-  var checkType = function (item) {
-    var check = true;
-    if (housingTypeSelect.value !== 'any') {
-      check = item.offer.type === housingTypeSelect.value;
-    }
-    return check;
-  };
-
-  var checkPrice = function (item) {
-    var check = true;
-    if (housingPriceSelect.value !== 'any') {
-      check = priceCheckVariants[housingPriceSelect.value](item);
+    if (select.value !== 'any' && select !== housingPriceSelect) {
+      check = item.offer[field] === value;
+    } else if (select.value !== 'any') {
+      check = PriceCheckVariant[value](item, field);
     }
     return check;
   };
 
   var checkOffer = function (item) {
-    return (checkHousingFeatures(item) && checkPrice(item)
-      && checkType(item) && checkRoomsAndGuestsValue(housingRoomsSelect, 'rooms', item) && checkRoomsAndGuestsValue(housingGuestsSelect, 'guests', item));
+    return (checkHousingFeatures(item)
+      && checkSelectValue(item, housingRoomsSelect, parseInt(housingRoomsSelect.value, 10), 'rooms')
+      && checkSelectValue(item, housingGuestsSelect, parseInt(housingGuestsSelect.value, 10), 'guests') && checkSelectValue(item, housingTypeSelect, housingTypeSelect.value, 'type')
+      && checkSelectValue(item, housingPriceSelect, housingPriceSelect.value, 'price'));
   };
 
   setMapFiltersFormAbility(true);
