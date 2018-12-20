@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
-  var minPriceParams = {
+  var MinPriceVariant = {
     PALACE: 10000,
     FLAT: 1000,
     HOUSE: 5000,
     BUNGALO: 0
   };
-  var capacityParams = {
+  var CapacityVariant = {
     1: ['2', '3', '0'],
     2: ['3', '0'],
     3: ['0'],
@@ -45,7 +45,7 @@
   };
 
   var onTypeChange = function () {
-    var min = minPriceParams[newAdTypeField.value.toUpperCase()];
+    var min = MinPriceVariant[newAdTypeField.value.toUpperCase()];
     newAdPriceField.min = min;
     newAdPriceField.placeholder = min;
   };
@@ -60,7 +60,7 @@
 
   var onCapacityInvalid = function () {
     var check = false;
-    check = capacityParams[newAdRoomsField.value].some(function (item) {
+    check = CapacityVariant[newAdRoomsField.value].some(function (item) {
       return item === newAdCapacityField.value;
     });
     if (check) {

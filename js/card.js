@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var accommodationTypes = {
+  var AccommodationType = {
     PALACE: 'Дворец',
     FLAT: 'Квартира',
     HOUSE: 'Дом',
@@ -9,12 +9,6 @@
   };
   var mapCardTemplate = document.querySelector('#card')
     .content.querySelector('.map__card');
-
-  var getDeclension = function (number, titles) {
-    var cases = [2, 0, 1, 1, 1, 2];
-    return titles[(number % 100 > 4 && number % 100 < 20) ?
-      2 : cases[(number % 10 < 5) ? number % 10 : 5]];
-  };
 
   var renderPhotosSet = function (object) {
     var fragment = document.createDocumentFragment();
@@ -49,11 +43,11 @@
     card.querySelector('.popup__title').textContent = advertObject.offer.title;
     card.querySelector('.popup__text--address').textContent = advertObject.offer.address;
     card.querySelector('.popup__text--price').textContent = advertObject.offer.price + '₽/ночь';
-    card.querySelector('.popup__type').textContent = accommodationTypes[advertObject.offer.type.toUpperCase()];
+    card.querySelector('.popup__type').textContent = AccommodationType[advertObject.offer.type.toUpperCase()];
     card.querySelector('.popup__text--capacity').textContent = advertObject.offer.rooms
-    + ' ' + getDeclension(advertObject.offer.rooms, ['комната', 'комнаты', 'комнат'])
+    + ' ' + window.utils.getDeclension(advertObject.offer.rooms, 'комната', 'комнаты', 'комнат')
     + ' для ' + advertObject.offer.guests + ' '
-    + getDeclension(advertObject.offer.guests, ['гостя', 'гостей', 'гостей']);
+    + window.utils.getDeclension(advertObject.offer.guests, 'гостя', 'гостей', 'гостей');
     card.querySelector('.popup__text--time').textContent = 'Заезд после '
     + advertObject.offer.checkin + ', '
     + 'выезд до ' + advertObject.offer.checkout;

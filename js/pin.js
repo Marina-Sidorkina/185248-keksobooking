@@ -3,26 +3,28 @@
 (function () {
   var mainMapPin = document.querySelector('.map__pin--main');
   var newAdAddressField = document.querySelector('#address');
-  var pointerOffsetParams = {
+  var PointerOffsetCoordinate = {
     X: Math.floor(mainMapPin.getBoundingClientRect().width / 2),
     Y: Math.floor(mainMapPin.getBoundingClientRect().height - 6) + parseInt(window.getComputedStyle(document.querySelector('.map__pin--main'), ':after').getPropertyValue('height'), 10),
   };
-  var mainMapPinParams = {
+  var MainMapPinCoordinate = {
     INITIAL_X: Math.floor(parseInt(mainMapPin.style.left, 10) + mainMapPin.getBoundingClientRect().width / 2),
-    INITIAL_Y: Math.floor(parseInt(mainMapPin.style.top, 10) + mainMapPin.getBoundingClientRect().height / 2),
-    BREAK_POINT_LEFT: 0 - pointerOffsetParams.X,
-    BREAK_POINT_RIGHT: 1200 - pointerOffsetParams.X,
-    BREAK_POINT_TOP: 130 - pointerOffsetParams.Y,
-    BREAK_POINT_BOTTOM: 630 - pointerOffsetParams.Y
+    INITIAL_Y: Math.floor(parseInt(mainMapPin.style.top, 10) + mainMapPin.getBoundingClientRect().height / 2)
+  };
+  var MainMapPinBreakpoint = {
+    LEFT_X: 0 - PointerOffsetCoordinate.X,
+    RIGHT_X: 1200 - PointerOffsetCoordinate.X,
+    TOP_Y: 130 - PointerOffsetCoordinate.Y,
+    BOTTOM_Y: 630 - PointerOffsetCoordinate.Y
   };
   var similarPinsAbility = false;
 
   var getMainMapPinPointerX = function () {
-    return parseInt(mainMapPin.style.left, 10) + pointerOffsetParams.X;
+    return parseInt(mainMapPin.style.left, 10) + PointerOffsetCoordinate.X;
   };
 
   var getMainMapPinPointerY = function () {
-    return parseInt(mainMapPin.style.top, 10) + pointerOffsetParams.Y;
+    return parseInt(mainMapPin.style.top, 10) + PointerOffsetCoordinate.Y;
   };
 
   var setAddressFieldValue = function (x, y) {
@@ -30,10 +32,10 @@
   };
 
   var resetMainPin = function () {
-    setAddressFieldValue(mainMapPinParams.INITIAL_X, mainMapPinParams.INITIAL_Y);
+    setAddressFieldValue(MainMapPinCoordinate.INITIAL_X, MainMapPinCoordinate.INITIAL_Y);
     mainMapPin.addEventListener('mousedown', onMouseDown);
-    mainMapPin.style.top = mainMapPinParams.INITIAL_Y + 'px';
-    mainMapPin.style.left = mainMapPinParams.INITIAL_X + 'px';
+    mainMapPin.style.top = MainMapPinCoordinate.INITIAL_Y + 'px';
+    mainMapPin.style.left = MainMapPinCoordinate.INITIAL_X + 'px';
     similarPinsAbility = false;
   };
 
@@ -55,8 +57,8 @@
   };
 
   var setPinCoordinates = function (shift) {
-    mainMapPin.style.top = checkMoveCoordinateValue((mainMapPin.offsetTop - shift.y), mainMapPinParams.BREAK_POINT_BOTTOM, mainMapPinParams.BREAK_POINT_TOP) + 'px';
-    mainMapPin.style.left = checkMoveCoordinateValue((mainMapPin.offsetLeft - shift.x), mainMapPinParams.BREAK_POINT_RIGHT, mainMapPinParams.BREAK_POINT_LEFT) + 'px';
+    mainMapPin.style.top = checkMoveCoordinateValue((mainMapPin.offsetTop - shift.y), MainMapPinBreakpoint.BOTTOM_Y, MainMapPinBreakpoint.TOP_Y) + 'px';
+    mainMapPin.style.left = checkMoveCoordinateValue((mainMapPin.offsetLeft - shift.x), MainMapPinBreakpoint.RIGHT_X, MainMapPinBreakpoint.LEFT_X) + 'px';
   };
 
   var getShiftCoordinates = function (startCoordinates, moveEvt) {

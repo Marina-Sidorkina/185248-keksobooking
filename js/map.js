@@ -2,7 +2,7 @@
 
 (function () {
   var PINS_AMOUNT = 5;
-  var similarMapPinParams = {
+  var SimilarMapPinParameter = {
     WIDTH: 50,
     HEIGHT: 70
   };
@@ -34,8 +34,8 @@
     var pin = mapPinTemplate.cloneNode(true);
     var pinImage = pin.querySelector('img');
     pin.classList.add('map__pin--similar');
-    pin.style.left = (advertObject.location.x - similarMapPinParams.WIDTH / 2) + 'px';
-    pin.style.top = (advertObject.location.y - similarMapPinParams.HEIGHT) + 'px';
+    pin.style.left = (advertObject.location.x - SimilarMapPinParameter.WIDTH / 2) + 'px';
+    pin.style.top = (advertObject.location.y - SimilarMapPinParameter.HEIGHT) + 'px';
     pinImage.src = advertObject.author.avatar;
     pinImage.alt = advertObject.offer.title;
     pin.addEventListener('click', function () {
